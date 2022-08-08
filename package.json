@@ -168,7 +168,7 @@
                         "Render Issue in html format"
                     ],
                     "description": "Choose render to show issues in editor"
-                }, 
+                },
                 "gitea.debug": {
                     "scope": "window",
                     "type": "boolean",
