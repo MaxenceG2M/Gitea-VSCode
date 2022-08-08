@@ -8,13 +8,15 @@ import { AbstractProvider } from './abstractProvider';
 
 export class IssueProvider extends AbstractProvider<Issue> {
     public static readonly DefaultState = IssueState.All;
+    private readonly logger: Logger;
     private state: string;
     private label?: string;
     private milestone?: string;
 
-    constructor(giteaConnector: GiteaConnector, state: string = "all", label?: string, milestone?: string) {
+    constructor(giteaConnector: GiteaConnector, state: string = "all", logger: Logger, label?: string, milestone?: string) {
         super(giteaConnector);
         this.state = state;
+        this.logger = logger;
         this.label = label
         this.milestone = milestone
     }
