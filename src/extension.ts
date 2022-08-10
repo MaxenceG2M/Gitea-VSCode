@@ -39,7 +39,7 @@ export function activate(context: vscode.ExtensionContext) {
     const openIssuesProvider = new IssueProvider("open");
     const closedIssuesProvider = new IssueProvider("closed");
 
-    vscode.window.registerTreeDataProvider('giteaIssues.opened-issues', openIssuesProvider);
+    // vscode.window.registerTreeDataProvider('giteaIssues.opened-issues', openIssuesProvider);
     vscode.window.registerTreeDataProvider('giteaIssues.closed-issues', closedIssuesProvider);
 
     vscode.commands.registerCommand('giteaIssues.openIssue', (issue: Issue) => {
@@ -57,6 +57,15 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand('giteaIssues.refreshIssues', () => {
         openIssuesProvider.refresh();
         closedIssuesProvider.refresh();
+    });
+
+    vscode.commands.registerCommand('giteaIssues.refreshClosedIssues', () => {
+        closedIssuesProvider.refresh()
+    });
+
+    vscode.window.createTreeView('giteaIssues.opened-issues', {
+        showCollapseAll: true,
+        treeDataProvider: openIssuesProvider
     });
 
     Logger.log('Gitea is ready')
