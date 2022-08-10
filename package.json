@@ -35,7 +35,7 @@
                 {
                     "id": "giteaIssues",
                     "title": "Gitea-Issues",
-                    "icon": "media/issue.svg"
+                    "icon": "$(issues)"
                 }
             ]
         },
@@ -43,11 +43,13 @@
             "giteaIssues": [
                 {
                     "id": "giteaIssues.opened-issues",
-                    "name": "Open Issues"
+                    "name": "Opened Issues",
+                    "type": "tree"
                 },
                 {
                     "id": "giteaIssues.closed-issues",
-                    "name": "Closed Issues"
+                    "name": "Closed Issues",
+                    "visibility": "collapsed"
                 }
             ]
         },
@@ -57,22 +59,20 @@
                 "title": "Show"
             },
             {
-                "command": "giteaIssues.refreshIssues",
-                "title": "Refresh"
+                "command": "giteaIssues.refreshOpenIssues",
+                "title": "Refresh opened issues",
+                "icon": "$(refresh)"
             },
             {
                 "command": "giteaIssues.refreshClosedIssues",
                 "title": "Refresh closed issues",
-                "icon": {
-                    "dark": "resources/dark/refresh.svg",
-                    "light": "resources/light/refresh.svg"
-                }
+                "icon": "$(refresh)"
             }
         ],
         "menus": {
             "view/title": [
                 {
-                    "command": "giteaIssues.refreshIssues",
+                    "command": "giteaIssues.refreshOpenIssues",
                     "group": "navigation",
                     "when": "view == giteaIssues.opened-issues"
                 },
