@@ -59,6 +59,14 @@ export function activate(context: vscode.ExtensionContext) {
         closedIssuesProvider.refresh();
     });
 
+    vscode.commands.registerCommand('giteaIssues.refreshOpenIssues', () => {
+        openIssuesProvider.refresh();
+    });
+
+    vscode.commands.registerCommand('giteaIssues.refreshClosedIssues', () => {
+        closedIssuesProvider.refresh()
+    });
+
     Logger.log('Gitea is ready')
 }
 

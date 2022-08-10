@@ -13,7 +13,9 @@
     "activationEvents": [
         "onView:giteaIssues.opened-issues",
         "onCommand:giteaIssues.initRepo",
-        "onCommand:giteaIssues.refreshIssues"
+        "onCommand:giteaIssues.refreshIssues",
+        "onCommand:giteaIssues.refreshOpenIssues",
+        "onCommand:giteaIssues.refreshClosedIssues"
     ],
     "main": "./out/extension.js",
     "icon": "resources/icon.png",
@@ -21,11 +23,11 @@
         "viewsWelcome": [
             {
                 "view": "giteaIssues.opened-issues",
-                "contents": "Refresh to get Gitea opened issues .\n[Refresh](command:giteaIssues.refreshIssues)"
+                "contents": "Refresh to get Gitea opened issues .\n[Refresh opened issues](command:giteaIssues.refreshOpenIssues)"
             },
             {
                 "view": "giteaIssues.closed-issues",
-                "contents": "Refresh to get Gitea closed issues .\n[Refresh](command:giteaIssues.refreshIssues)"
+                "contents": "Refresh to get Gitea closed issues .\n[Refresh closed issues](command:giteaIssues.refreshClosedIssues)"
             }
         ],
         "viewsContainers": {
@@ -56,7 +58,11 @@
             },
             {
                 "command": "giteaIssues.refreshIssues",
-                "title": "Refresh",
+                "title": "Refresh"
+            },
+            {
+                "command": "giteaIssues.refreshClosedIssues",
+                "title": "Refresh closed issues",
                 "icon": {
                     "dark": "resources/dark/refresh.svg",
                     "light": "resources/light/refresh.svg"
@@ -69,6 +75,11 @@
                     "command": "giteaIssues.refreshIssues",
                     "group": "navigation",
                     "when": "view == giteaIssues.opened-issues"
+                },
+                {
+                    "command": "giteaIssues.refreshClosedIssues",
+                    "group": "navigation",
+                    "when": "view == giteaIssues.closed-issues"
                 }
             ]
         },
