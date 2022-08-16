@@ -11,7 +11,12 @@ interface ConfigStorage {
     debug: boolean;
 }
 
-export class Config implements ConfigStorage {
+export interface ConfigTypes extends ConfigStorage {
+    readonly repoApiIssuesUrl: string;
+    readonly repoApiLabelsUrl: string;
+}
+
+export class Config implements ConfigTypes {
     private get storage() {
         return workspace.getConfiguration('gitea', null);
     }
@@ -74,11 +79,19 @@ export class Config implements ConfigStorage {
         this.storage.update('repo', value);
     }
 
-    public get repoApiUrl(): string {
+    protected get repoApiUrl(): string {
         return this.instanceURL.replace(/\/$/, "") +
             '/api/v1/repos/' +
             this.owner +
             '/' + this.repo;
+    }
+
+    public get repoApiIssuesUrl(): string {
+        return this.repoApiUrl + '/issues';
+    }
+
+    public get repoApiLabelsUrl(): string {
+        return this.repoApiUrl + '/labels';
     }
 
     public set sslVerify(value) {
