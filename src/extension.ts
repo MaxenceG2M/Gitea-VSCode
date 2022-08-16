@@ -1,11 +1,13 @@
 import * as vscode from 'vscode';
 
-import { showIssueHTML, showIssueMD } from './template.issues';
-import { Issue } from './issue';
-import { IssueProvider } from './issueProvider';
 import { Config } from './config';
-import MarkdownIt = require('markdown-it');
+import { Issue } from './issue';
 import { Logger } from './logger';
+import { IssueProvider } from './providers/issueProvider';
+import { LabelProvider } from './providers/labelProvider';
+import { MilestoneProvider } from './providers/milestoneProvider';
+import { showIssueHTML, showIssueMD } from './template.issues';
+import MarkdownIt = require('markdown-it');
 
 export function showIssueInWebPanel(issue: Issue) {
     const panel = vscode.window.createWebviewPanel(
@@ -38,9 +40,13 @@ export function activate(context: vscode.ExtensionContext) {
     let openIssues: Array<Issue> = [];
     const openIssuesProvider = new IssueProvider("open");
     const closedIssuesProvider = new IssueProvider("closed");
+    const labelsProvider = new LabelProvider();
+    const milestonesProvider = new MilestoneProvider();
 
     vscode.window.registerTreeDataProvider('giteaIssues.opened-issues', openIssuesProvider);
     vscode.window.registerTreeDataProvider('giteaIssues.closed-issues', closedIssuesProvider);
+    vscode.window.registerTreeDataProvider('giteaIssues.labels', labelsProvider);
+    vscode.window.registerTreeDataProvider('giteaIssues.milestones', milestonesProvider);
 
     vscode.commands.registerCommand('giteaIssues.openIssue', (issue: Issue) => {
         const issueOpenable = openIssues.find((c) => c.issueId === issue.issueId) === undefined;
@@ -65,6 +71,14 @@ export function activate(context: vscode.ExtensionContext) {
 
     vscode.commands.registerCommand('giteaIssues.refreshClosedIssues', () => {
         closedIssuesProvider.refresh()
+    });
+
+    vscode.commands.registerCommand('giteaIssues.refreshLabels', () => {
+        labelsProvider.refresh()
+    });
+
+    vscode.commands.registerCommand('giteaIssues.refreshMilestones', () => {
+        milestonesProvider.refresh()
     });
 
     Logger.log('Gitea is ready')

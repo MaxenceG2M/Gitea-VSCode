@@ -12,7 +12,8 @@ interface ConfigStorage {
 }
 
 export interface ConfigTypes extends ConfigStorage {
-    readonly repoApiUrl: string;
+    readonly repoApiIssuesUrl: string;
+    readonly repoApiLabelsUrl: string;
 }
 
 export class Config implements ConfigTypes {
@@ -55,7 +56,7 @@ export class Config implements ConfigTypes {
     }
 
     public get baseURL(): string {
-        return this.loadConfigValue('baseURL', 'string');
+        return `${this.instanceURL}/${this.owner}/${this.repo}`;
     }
 
     public set baseURL(value) {
@@ -78,11 +79,23 @@ export class Config implements ConfigTypes {
         this.storage.update('repo', value);
     }
 
-    public get repoApiUrl(): string {
+    protected get repoApiUrl(): string {
         return this.instanceURL.replace(/\/$/, "") +
             '/api/v1/repos/' +
             this.owner +
-            '/' + this.repo + '/issues';
+            '/' + this.repo;
+    }
+
+    public get repoApiIssuesUrl(): string {
+        return this.repoApiUrl + '/issues';
+    }
+
+    public get repoApiLabelsUrl(): string {
+        return this.repoApiUrl + '/labels';
+    }
+
+    public get repoApiMilestonesUrl(): string {
+        return this.repoApiUrl + '/milestones';
     }
 
     public set sslVerify(value) {

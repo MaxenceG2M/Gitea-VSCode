@@ -14,8 +14,26 @@ export class GiteaConnector {
         this.ssl = ssl;
     }
 
-    public async getIssues(repoUri: string, state: string, page: number = 0): Promise<IGiteaResponse> {
-        return this.getEndpoint(`${repoUri}?state=${state}&page=${page}`);
+    public async getIssues(repoUri: string, state: string, page: number = 1, label? :string, milestone?: string): Promise<IGiteaResponse> {
+        let endpoint = `${repoUri}?state=${state}&page=${page}`;
+        if (label) {
+            endpoint += `&labels=${label}`
+        }
+        if (milestone) {
+            endpoint += `&milestones=${milestone}`
+        }
+        return this.getEndpoint(endpoint);
+        // TODO get repo url here
+    }
+
+    public async getLabels(repoUri: string, page: number = 0): Promise<IGiteaResponse> {
+        return this.getEndpoint(`${repoUri}?page=${page}`);
+        // TODO get repo url here
+    }
+
+    public async getMilestones(repoUri: string, page: number = 0): Promise<IGiteaResponse> {
+        return this.getEndpoint(`${repoUri}?page=${page}`);
+        // TODO get repo url here
     }
 
     private async getEndpoint(url: string): Promise<IGiteaResponse> {
