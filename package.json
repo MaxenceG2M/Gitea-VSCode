@@ -50,6 +50,11 @@
                     "id": "giteaIssues.closed-issues",
                     "name": "Closed Issues",
                     "visibility": "collapsed"
+                },
+                {
+                    "id": "giteaIssues.labels",
+                    "name": "Labels",
+                    "visibility": "collapsed"
                 }
             ]
         },
@@ -67,6 +72,11 @@
                 "command": "giteaIssues.refreshClosedIssues",
                 "title": "Refresh closed issues",
                 "icon": "$(refresh)"
+            },
+            {
+                "command": "giteaIssues.refreshLabels",
+                "title": "Refresh Labels",
+                "icon": "$(refresh)"
             }
         ],
         "menus": {
@@ -80,6 +90,11 @@
                     "command": "giteaIssues.refreshClosedIssues",
                     "group": "navigation",
                     "when": "view == giteaIssues.closed-issues"
+                },
+                {
+                    "command": "giteaIssues.refreshLabels",
+                    "group": "navigation",
+                    "when": "view == giteaIssues.labels"
                 }
             ]
         },

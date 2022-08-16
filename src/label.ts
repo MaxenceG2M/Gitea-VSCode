@@ -1,70 +1,41 @@
 import { Uri, TreeItem, TreeItemCollapsibleState, Command } from 'vscode';
+import { IssueProvider } from './issueProvider';
 
-interface Label {
-  color: string;
-  id: number;
-  name: string;
-  url: string;
-}
+export class Label extends TreeItem {
 
-export class Issue extends TreeItem {
-    contextValue = 'issue';
-    original_issue? : Issue;
-
-  static createIssue(element: Issue) {
-    let ret = new Issue(
+  static createLabel(element: Label) {
+    return new Label(
         element.label,
-        element.issueId,
-        element.body,
-        element.state,
-        element.assignee,
-        element.assignees,
-        element.creator,
-        element.labels,
-        element.collapsibleState,
-        element.title,
-        element.html_url)
-    ret.original_issue = element;
-    return ret
+        element.color,
+        element.description,
+        element.labelId,
+        element.name,element.url,
+        element.collapsibleState
+    )
   }
 
   constructor(
     public readonly label: string,
-    public issueId: number,
-    public body: string,
-    public state: string,
-    public assignee: string,
-    public assignees: any[],
-    public creator: string,
-    public labels: Label[],
+    public color: string,
+    public description: string,
+    public labelId: number,
+    public name: string,
+    public url: string,
     public collapsibleState: TreeItemCollapsibleState,
-    public title: string,
-    public html_url: string,
-    public command?: Command
+    public issueProvider?: IssueProvider
   ) {
     super(label, collapsibleState);
-    this.tooltip = this.label + ' - ' + this.assignee;
+    this.tooltip = this.label;
   }
 
   labelDependentIcon(dark: boolean = false): Uri {
-    if (this.labels.length === 0) {
-      return createIconWithColor('#868686');
-    } else {
-      return createIconWithColor(this.labels[0].color);
-    }
+    return createIconWithColor(this.color);
   }
 
   iconPath = {
     light: this.labelDependentIcon(),
     dark: this.labelDependentIcon(true),
   };
-
-  hasLabel(labelName: string): boolean {
-    for (let label of this.labels) {
-        if (label.name == labelName) return true
-    }
-    return false
-  }
 }
 
 export function createIconWithColor(color: string): Uri {

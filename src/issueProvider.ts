@@ -11,17 +11,19 @@ export class IssueProvider implements vscode.TreeDataProvider<Issue> {
     readonly onDidChangeTreeData: vscode.Event<Issue | undefined | null | void> = this._onDidChangeTreeData.event;
 
     private state: string;
+    private label?: string;
     private issueList: Issue[] = [];
 
-    constructor(state: string) {
+    constructor(state: string, label?: string) {
         this.state = state;
+        this.label = label
     }
 
     public getTreeItem(element: Issue): vscode.TreeItem | Thenable<vscode.TreeItem> {
         return element;
     }
 
-    public async getIssuesAsync() : Promise<Issue[]> {
+    public async getIssues(labelName?: string) : Promise<Issue[]> {
         this.issueList = [];
         const config = new Config();
         const giteaConnector = new GiteaConnector(config.token, config.sslVerify);
@@ -30,7 +32,7 @@ export class IssueProvider implements vscode.TreeDataProvider<Issue> {
         let page = 1;
         while (page < 11) {
             Logger.log( `Retrieve issues. State: ${this.state} - page ${page}`);
-            const issuesOfPage = (await giteaConnector.getIssues(config.repoApiUrl, this.state, page)).data;
+            const issuesOfPage = (await giteaConnector.getIssues(config.repoApiIssuesUrl, this.state, page, this.label)).data;
             Logger.log( `${issuesOfPage.length} issues retrieved (state: ${this.state} - page: ${page})`);
             issues.push(...issuesOfPage);
             issuesOfPage.forEach((c) => {
@@ -65,15 +67,16 @@ export class IssueProvider implements vscode.TreeDataProvider<Issue> {
     }
 
     public async refresh() {
-        await this.getIssuesAsync();
+        await this.getIssues();
         this._onDidChangeTreeData.fire();
     }
 
     public getChildren(element?: Issue): vscode.ProviderResult<any[]> {
         return this.createChildNodes(element, this.issueList);
+        // return element ? element.nodes : this.issueList
     }
 
-    private createChildNodes(element: Issue | undefined, issues: Issue[]) {
+    private createChildNodes(element: Issue | undefined, issues: Issue[]): Issue[] | Promise<vscode.TreeItem[]> {
         for (const issue of issues) {
             if (element === issue) {
                 let childItems: vscode.TreeItem[] = [
