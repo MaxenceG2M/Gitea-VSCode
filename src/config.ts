@@ -89,7 +89,6 @@ export class Config implements ConfigStorage {
         return this.loadConfigValue('sslVerify', 'boolean');
     }
 
-
     public get render() {
         return this.loadConfigValue('render', 'string')
     }
