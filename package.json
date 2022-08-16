@@ -130,6 +130,20 @@
                     "type": "boolean",
                     "default": false,
                     "description": "Enable debug mode. Need to reload window to apply"
+                },
+                "gitea.render": {
+                    "scope": "resource",
+                    "type": "string",
+                    "default": "markdown",
+                    "enum": [
+                        "markdown",
+                        "html"
+                    ],
+                    "enumDescriptions": [
+                        "Render Issue in markdown format",
+                        "Render Issue in html format"
+                    ],
+                    "description": "Choose render to show issues in editor"
                 }
             }
         }
