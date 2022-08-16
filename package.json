@@ -154,7 +154,6 @@
                     "default": true,
                     "description": "true=Stop when cannot verify SSL certificate, false=Continue any way. Like git config 'sslVerify'."
                 },
-
                 "gitea.render": {
                     "scope": "resource",
                     "type": "string",
