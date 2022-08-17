@@ -60,6 +60,8 @@ export class IssueProvider implements vscode.TreeDataProvider<Issue> {
             issue.contextValue = 'issue';
             this.issueList.push(issue)
             Logger.debug('Issue processed', { 'id': issue.issueId, 'state': issue.state })
+            issue.contextValue = 'issue';
+            this.issueList.push(issue)
         });
 
         return this.issueList
