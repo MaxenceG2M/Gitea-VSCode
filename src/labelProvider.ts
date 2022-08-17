@@ -2,6 +2,8 @@ import * as vscode from 'vscode';
 
 import { Config } from './config';
 import { GiteaConnector } from './giteaConnector';
+import { Issue } from './issue';
+import { IssueProvider } from './issueProvider';
 import { Label } from './label';
 import { Logger } from './logger';
 
@@ -22,7 +24,7 @@ export class LabelProvider implements vscode.TreeDataProvider<Label> {
         return element;
     }
 
-    public async getLabelsAsync() {
+    public async getLabels() {
         this.labelList = [];
         const config = new Config();
         const giteaConnector = new GiteaConnector(config.token, config.sslVerify);
@@ -45,18 +47,14 @@ export class LabelProvider implements vscode.TreeDataProvider<Label> {
         }
         this.labelList = labels as Label[];
         this.labelList.forEach((label: Label) => {
-            // label.command = {
-            //     command: 'giteaIssues.openIssue',
-            //     title: '',
-            //     arguments: [label],
-            // };
             label.collapsibleState = vscode.TreeItemCollapsibleState.Collapsed;
             label.contextValue = 'label';
+            label.issueProvider = new IssueProvider('all', this.logger, label.name)
         });
     }
 
     public async refresh() {
-        await this.getLabelsAsync();
+        await this.getLabels();
         this._onDidChangeTreeData.fire();
     }
 
@@ -64,13 +62,23 @@ export class LabelProvider implements vscode.TreeDataProvider<Label> {
         return this.createChildNodes(this.labelList, element)
     }
 
-    private createChildNodes(labels: Label[], element?: Label) {
+    private async createChildNodes(labels: Label[], element?: Label) {
         for (const label of labels) {
             if (element === label) {
-                let childItems: vscode.TreeItem[] = [
-                    new vscode.TreeItem('Description: ' + element?.description, vscode.TreeItemCollapsibleState.None),
-                ];
-                return Promise.resolve(childItems);
+                let issues = await Promise.resolve(label.issueProvider?.getIssuesAsync());
+                let issueList = issues as Issue[];
+
+                if (!issueList) return Promise.resolve([]);
+
+                let childItems: vscode.TreeItem[] = [];
+
+                issueList.forEach((issue: Issue) => {
+                    if (issue.hasLabel(element.name)) {
+                        childItems.push(new vscode.TreeItem(issue.label));
+                    }
+                });
+
+                return Promise.resolve(childItems)
             }
         }
         return this.labelList;
