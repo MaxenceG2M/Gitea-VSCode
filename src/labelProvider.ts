@@ -35,8 +35,7 @@ export class LabelProvider implements vscode.TreeDataProvider<Label> {
             this.logger.log( `Get Labels page ${page}: ${labelsOfPage.length} retrieved`);
             labels.push(...labelsOfPage);
             labelsOfPage.forEach((c) => {
-                c.label = `#${c.id} - ${c.name}`;
-                c.label = `${c.name} (#${c.id})`;
+                c.label = c.name
                 c.labelId = c.id;
             });
             page++;
@@ -51,8 +50,8 @@ export class LabelProvider implements vscode.TreeDataProvider<Label> {
             //     title: '',
             //     arguments: [label],
             // };
-            // label.collapsibleState = vscode.TreeItemCollapsibleState.Collapsed;
-            // label.contextValue = 'issue';
+            label.collapsibleState = vscode.TreeItemCollapsibleState.Collapsed;
+            label.contextValue = 'label';
         });
     }
 
@@ -62,11 +61,19 @@ export class LabelProvider implements vscode.TreeDataProvider<Label> {
     }
 
     public getChildren(element?: Label): vscode.ProviderResult<any[]> {
-        return this.createChildNodes(element, this.labelList);
+        return this.createChildNodes(this.labelList, element)
     }
 
-    private createChildNodes(element: Label | undefined, labels: Label[]) {
-        return labels;
+    private createChildNodes(labels: Label[], element?: Label) {
+        for (const label of labels) {
+            if (element === label) {
+                let childItems: vscode.TreeItem[] = [
+                    new vscode.TreeItem('Description: ' + element?.description, vscode.TreeItemCollapsibleState.None),
+                ];
+                return Promise.resolve(childItems);
+            }
+        }
+        return this.labelList;
     }
 }
 
