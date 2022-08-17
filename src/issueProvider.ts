@@ -21,7 +21,7 @@ export class IssueProvider implements vscode.TreeDataProvider<Issue> {
         return element;
     }
 
-    public async getIssuesAsync() {
+    public async getIssuesAsync() : Promise<Issue[]> {
         this.issueList = [];
         const config = new Config();
         const giteaConnector = new GiteaConnector(config.token, config.sslVerify);
@@ -45,16 +45,23 @@ export class IssueProvider implements vscode.TreeDataProvider<Issue> {
                 break;
             }
         }
-        this.issueList = issues as Issue[];
-        this.issueList.forEach((issue: Issue) => {
+
+        this.issueList = []
+        issues.forEach((element: Issue) => {
+            let issue = Issue.createIssue(element)
+
             issue.command = {
                 command: 'giteaIssues.openIssue',
                 title: '',
-                arguments: [issue],
+                arguments: [element],
             };
             issue.collapsibleState = vscode.TreeItemCollapsibleState.Collapsed;
             Logger.debug('Issue processed', { 'id': issue.issueId, 'state': issue.state })
+            issue.contextValue = 'issue';
+            this.issueList.push(issue)
         });
+
+        return this.issueList
     }
 
     public async refresh() {
