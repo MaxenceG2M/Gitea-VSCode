@@ -61,23 +61,24 @@ export class LabelProvider implements vscode.TreeDataProvider<Label> {
     }
 
     public getChildren(element?: Label): vscode.ProviderResult<any[]> {
-        return this.createChildNodes(this.labelList, element)
+        if (element === undefined) {
+            return this.labelList;
+        }
+
+        if (element instanceof Label) {
+            return this.createChildNodes(this.labelList, element)
+        }
     }
 
     private async createChildNodes(labels: Label[], element?: Label) {
         for (const label of labels) {
             if (element === label) {
-                let issues = await Promise.resolve(label.issueProvider?.getIssuesAsync());
+                let issues = await Promise.resolve(label.issueProvider?.getIssues());
 
                 if (!issues) return Promise.resolve([]);
 
-                let childItems: vscode.TreeItem[] = [];
-
-                issues.forEach((issue: Issue) => {
-                    if (issue.hasLabel(element.name)) {
-                        childItems.push(new vscode.TreeItem(issue));
-                    }
-                });
+                let childItems: vscode.TreeItem[] = issues;
+                childItems.map(issue => issue.collapsibleState = vscode.TreeItemCollapsibleState.None)
 
                 return Promise.resolve(childItems)
             }
