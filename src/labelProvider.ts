@@ -45,11 +45,13 @@ export class LabelProvider implements vscode.TreeDataProvider<Label> {
                 break;
             }
         }
-        this.labelList = labels as Label[];
-        this.labelList.forEach((label: Label) => {
+        this.labelList = [];
+        labels.forEach((element: Label) => {
+            let label = Label.createLabel(element)
             label.collapsibleState = vscode.TreeItemCollapsibleState.Collapsed;
             label.contextValue = 'label';
             label.issueProvider = new IssueProvider('all', this.logger, label.name)
+            this.labelList.push(label)
         });
     }
 
@@ -66,15 +68,14 @@ export class LabelProvider implements vscode.TreeDataProvider<Label> {
         for (const label of labels) {
             if (element === label) {
                 let issues = await Promise.resolve(label.issueProvider?.getIssuesAsync());
-                let issueList = issues as Issue[];
 
-                if (!issueList) return Promise.resolve([]);
+                if (!issues) return Promise.resolve([]);
 
                 let childItems: vscode.TreeItem[] = [];
 
-                issueList.forEach((issue: Issue) => {
+                issues.forEach((issue: Issue) => {
                     if (issue.hasLabel(element.name)) {
-                        childItems.push(new vscode.TreeItem(issue.label));
+                        childItems.push(new vscode.TreeItem(issue));
                     }
                 });
 
