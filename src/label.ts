@@ -1,4 +1,4 @@
-import { Uri, TreeItem, TreeItemCollapsibleState, Command } from 'vscode';
+import { Uri, TreeItem, TreeItemCollapsibleState } from 'vscode';
 import { IssueProvider } from './issueProvider';
 
 export class Label extends TreeItem {
