@@ -1,4 +1,5 @@
 import { Uri, TreeItem, TreeItemCollapsibleState, Command } from 'vscode';
+import { Milestone } from './milestone';
 
 interface Label {
   color: string;
@@ -23,7 +24,8 @@ export class Issue extends TreeItem {
         element.labels,
         element.collapsibleState,
         element.title,
-        element.html_url)
+        element.html_url,
+        element.milestone)
     ret.original_issue = element;
     return ret
   }
@@ -40,6 +42,7 @@ export class Issue extends TreeItem {
     public collapsibleState: TreeItemCollapsibleState,
     public title: string,
     public html_url: string,
+    public milestone?: Milestone,
     public command?: Command
   ) {
     super(label, collapsibleState);

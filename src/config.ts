@@ -56,7 +56,7 @@ export class Config implements ConfigTypes {
     }
 
     public get baseURL(): string {
-        return this.loadConfigValue('baseURL', 'string');
+        return `${this.instanceURL}/${this.owner}/${this.repo}`;
     }
 
     public set baseURL(value) {
