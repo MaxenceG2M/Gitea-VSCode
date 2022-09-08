@@ -41,6 +41,11 @@ export class GiteaConnector {
         return this.getEndpoint(`${this.repoUri}/${GiteaEndpoint.Milestones}?page=${page}`);
     }
 
+    public async getMilestones(repoUri: string, page: number = 0): Promise<IGiteaResponse> {
+        return this.getEndpoint(`${repoUri}?page=${page}`);
+        // TODO get repo url here
+    }
+
     private async getEndpoint(url: string): Promise<IGiteaResponse> {
         Logger.debug('getEndpoint', 'request', {'url': url})
         return new Promise<IGiteaResponse>((resolve, reject) => {

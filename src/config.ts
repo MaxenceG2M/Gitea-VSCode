@@ -94,6 +94,10 @@ export class Config implements ConfigTypes {
         return this.repoApiUrl + '/labels';
     }
 
+    public get repoApiMilestonesUrl(): string {
+        return this.repoApiUrl + '/milestones';
+    }
+
     public set sslVerify(value) {
         this.storage.update('sslVerify', value);
     }
