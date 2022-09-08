@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { IGiteaResponse } from '../IGiteaResponse';
 
 import { GiteaConnector } from '../giteaConnector';
 import { IGiteaResponse } from '../IGiteaResponse';

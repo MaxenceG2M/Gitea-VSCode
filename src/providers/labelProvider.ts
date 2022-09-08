@@ -5,6 +5,7 @@ import { Label } from '../label';
 import { AbstractProvider } from './abstractProvider';
 import { IssueProvider } from './issueProvider';
 import { Logger } from '../logger';
+import { IGiteaResponse } from '../IGiteaResponse';
 
 export class LabelProvider extends AbstractProvider<Label> {
     protected getData(page: number): Promise<IGiteaResponse> {

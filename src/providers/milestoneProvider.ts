@@ -5,6 +5,7 @@ import { Milestone } from '../milestone';
 import { AbstractProvider } from './abstractProvider';
 import { IssueProvider } from './issueProvider';
 import { Logger } from '../logger';
+import { IGiteaResponse } from '../IGiteaResponse';
 
 export class MilestoneProvider extends AbstractProvider<Milestone> {
     protected getData(page: number): Promise<IGiteaResponse> {
