@@ -3,6 +3,7 @@ import * as vscode from 'vscode';
 import { showIssueHTML, showIssueMD } from './template.issues';
 import { Issue } from './issue';
 import { IssueProvider } from './issueProvider';
+import { MilestoneProvider } from './milestoneProvider';
 import { Config } from './config';
 import { LabelProvider } from './labelProvider';
 import MarkdownIt = require('markdown-it');
@@ -40,10 +41,12 @@ export function activate(context: vscode.ExtensionContext) {
     const openIssuesProvider = new IssueProvider("open");
     const closedIssuesProvider = new IssueProvider("closed");
     const labelsProvider = new LabelProvider();
+    const milestonesProvider = new MilestoneProvider();
 
     vscode.window.registerTreeDataProvider('giteaIssues.opened-issues', openIssuesProvider);
     vscode.window.registerTreeDataProvider('giteaIssues.closed-issues', closedIssuesProvider);
     vscode.window.registerTreeDataProvider('giteaIssues.labels', labelsProvider);
+    vscode.window.registerTreeDataProvider('giteaIssues.milestones', milestonesProvider);
 
     vscode.commands.registerCommand('giteaIssues.openIssue', (issue: Issue) => {
         const issueOpenable = openIssues.find((c) => c.issueId === issue.issueId) === undefined;
@@ -72,6 +75,10 @@ export function activate(context: vscode.ExtensionContext) {
 
     vscode.commands.registerCommand('giteaIssues.refreshLabels', () => {
         labelsProvider.refresh()
+    });
+
+    vscode.commands.registerCommand('giteaIssues.refreshMilestones', () => {
+        milestonesProvider.refresh()
     });
 
     Logger.log('Gitea is ready')

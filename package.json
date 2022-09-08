@@ -55,6 +55,11 @@
                     "id": "giteaIssues.labels",
                     "name": "Labels",
                     "visibility": "collapsed"
+                },
+                {
+                    "id": "giteaIssues.milestones",
+                    "name": "Milestones",
+                    "visibility": "collapsed"
                 }
             ]
         },
@@ -77,6 +82,11 @@
                 "command": "giteaIssues.refreshLabels",
                 "title": "Refresh Labels",
                 "icon": "$(refresh)"
+            },
+            {
+                "command": "giteaIssues.refreshMilestones",
+                "title": "Refresh Milestones",
+                "icon": "$(refresh)"
             }
         ],
         "menus": {
@@ -95,6 +105,11 @@
                     "command": "giteaIssues.refreshLabels",
                     "group": "navigation",
                     "when": "view == giteaIssues.labels"
+                },
+                {
+                    "command": "giteaIssues.refreshMilestones",
+                    "group": "navigation",
+                    "when": "view == giteaIssues.milestones"
                 }
             ]
         },
