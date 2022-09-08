@@ -7,19 +7,21 @@ import { AbstractProvider } from './abstractProvider';
 export class IssueProvider extends AbstractProvider<Issue> {
     private state: string;
     private label?: string;
-    private issueList: Issue[] = [];
+    private milestone?: string;
 
-    constructor(state: string, label?: string) {
-        super()
+    constructor(state: string, label?: string, milestone?: string) {
+        super();
         this.state = state;
-        this.label = label;
+        this.label = label
+        this.milestone = milestone
     }
 
     public async getData(page: number = 1, label?: string) : Promise<Issue[]> {
         let issues: Issue[] = [];
 
         Logger.log( `Retrieve issues. State: ${this.state} - page ${page}`);
-        const issuesOfPage = (await this.giteaConnector.getIssues(this.config.repoApiIssuesUrl, this.state, page, this.label)).data;
+        const issuesOfPage = (await this.giteaConnector.getIssues(
+            this.config.repoApiIssuesUrl, this.state, page, this.label, this.milestone)).data;
         Logger.log( `${issuesOfPage.length} issues retrieved (state: ${this.state} - page: ${page})`);
 
         issuesOfPage.forEach((c) => {
