@@ -6,10 +6,10 @@ import { Label } from '../label';
 import { Milestone } from '../milestone';
 
 import { Logger } from '../logger';
+import { IGiteaResponse } from '../IGiteaResponse';
 
 export abstract class AbstractProvider<T extends Issue | Label | Milestone> implements vscode.TreeDataProvider<T> {
     private _onDidChangeTreeData: vscode.EventEmitter<T | undefined | null | void> = new vscode.EventEmitter<T | undefined | null | void>();
-
     readonly onDidChangeTreeData: vscode.Event<T | undefined | null | void> = this._onDidChangeTreeData.event;
 
     protected elementList: T[] = [];
@@ -29,22 +29,36 @@ export abstract class AbstractProvider<T extends Issue | Label | Milestone> impl
     public async getElements() : Promise<T[]> {
         this.elementList = [];
 
-        const elements = [];
         let page = 1;
         while (page < 11) {
-            let retData = await Promise.resolve(this.getData(page))
-            elements.push(...retData)
+            Logger.log( `Retrieve ABSTRACT - page ${page}`); // TODO Log line
+            const elementsOfPage = (await this.getData(page)).data;
+            Logger.log( `Get ABSTRACT page ${page}: ${elementsOfPage.length} retrieved`); // TODO Log line
+            elementsOfPage.forEach((c) => {
+                c.label = c.name
+                let element = this.createElement(c);
+                this.elementList.push(element)
+            });
             page++
 
-            if (retData.length < 10) {
+            if (elementsOfPage.length < 10) {
                 break;
             }
         }
-
-        this.elementList = elements
-
         return this.elementList
     }
+
+    /**
+     * Get data on Gitea
+     * @param page page number
+     */
+    protected abstract getData(page: number): Promise<IGiteaResponse>;
+
+    /**
+     * Create an object from a "raw" Gitea data
+     * @param element element to convert
+     */
+    protected abstract createElement(element: any): T;
 
     public async refresh() {
         await this.getElements();
@@ -56,7 +70,5 @@ export abstract class AbstractProvider<T extends Issue | Label | Milestone> impl
     }
 
     protected abstract createChildNodes(element: T | undefined, elements: T[]): T[] | Promise<vscode.TreeItem[]>;
-
-    protected abstract getData(page: number): Promise<T[]>
 }
 
