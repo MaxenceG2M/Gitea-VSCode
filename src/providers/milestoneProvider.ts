@@ -2,8 +2,8 @@ import * as vscode from 'vscode';
 
 import { AbstractProvider } from './abstractProvider';
 import { IssueProvider } from './issueProvider';
-import { Milestone } from './milestone';
-import { Logger } from './logger';
+import { Milestone } from '../milestone';
+import { Logger } from '../logger';
 
 export class MilestoneProvider extends AbstractProvider<Milestone> {
     public async getData(page: number = 1) : Promise<Milestone[]> {

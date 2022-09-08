@@ -1,5 +1,5 @@
 import { TreeItem, TreeItemCollapsibleState } from 'vscode';
-import { IssueProvider } from './issueProvider';
+import { IssueProvider } from './providers/issueProvider';
 
 export class Milestone extends TreeItem {
 
