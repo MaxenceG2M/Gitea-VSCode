@@ -2,8 +2,8 @@ import * as vscode from 'vscode';
 
 import { AbstractProvider } from './abstractProvider';
 import { IssueProvider } from './issueProvider';
-import { Label } from './label';
-import { Logger } from './logger';
+import { Label } from '../label';
+import { Logger } from '../logger';
 
 export class LabelProvider extends AbstractProvider<Label> {
     public async getData(page: number = 1) : Promise<Label[]> {

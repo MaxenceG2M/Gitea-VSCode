@@ -3,9 +3,9 @@ import MarkdownIt = require('markdown-it');
 
 import { showIssueHTML, showIssueMD } from './template.issues';
 import { Issue } from './issue';
-import { IssueProvider } from './issueProvider';
-import { LabelProvider } from './labelProvider';
-import { MilestoneProvider } from './milestoneProvider';
+import { IssueProvider } from './providers/issueProvider';
+import { LabelProvider } from './providers/labelProvider';
+import { MilestoneProvider } from './providers/milestoneProvider';
 
 import { Logger } from './logger';
 import { Config } from './config';
@@ -81,7 +81,7 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand('giteaIssues.refreshMilestones', () => {
         milestonesProvider.refresh()
     });
-    
+
     Logger.log('Gitea is ready')
 }
 

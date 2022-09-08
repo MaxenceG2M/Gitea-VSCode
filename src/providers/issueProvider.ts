@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 
-import { Issue } from './issue';
-import { Logger } from './logger';
+import { Issue } from '../issue';
+import { Logger } from '../logger';
 import { AbstractProvider } from './abstractProvider';
 
 export class IssueProvider extends AbstractProvider<Issue> {

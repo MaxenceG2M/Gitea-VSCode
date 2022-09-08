@@ -1,11 +1,11 @@
 import * as vscode from 'vscode';
-import { Config } from './config';
-import { GiteaConnector } from './giteaConnector';
-import { Issue } from './issue';
-import { Label } from './label';
-import { Milestone } from './milestone';
+import { Config } from '../config';
+import { GiteaConnector } from '../giteaConnector';
+import { Issue } from '../issue';
+import { Label } from '../label';
+import { Milestone } from '../milestone';
 
-import { Logger } from './logger';
+import { Logger } from '../logger';
 
 export abstract class AbstractProvider<T extends Issue | Label | Milestone> implements vscode.TreeDataProvider<T> {
     private _onDidChangeTreeData: vscode.EventEmitter<T | undefined | null | void> = new vscode.EventEmitter<T | undefined | null | void>();
