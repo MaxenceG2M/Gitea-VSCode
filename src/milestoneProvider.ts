@@ -23,7 +23,7 @@ export class MilestoneProvider extends AbstractProvider<Milestone> {
             milestone.milestoneId = c.id;
             milestone.collapsibleState = vscode.TreeItemCollapsibleState.Collapsed;
             milestone.contextValue = 'milestone';
-            milestone.issueProvider = new IssueProvider('all', this.logger, milestone.title)
+            milestone.issueProvider = new IssueProvider('all', this.logger, undefined, milestone.title)
             milestones.push(milestone)
         });
 
