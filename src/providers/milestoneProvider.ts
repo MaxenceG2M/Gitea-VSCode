@@ -3,27 +3,22 @@ import * as vscode from 'vscode';
 import { AbstractProvider } from './abstractProvider';
 import { IssueProvider } from './issueProvider';
 import { Milestone } from '../milestone';
-import { Logger } from '../logger';
+import { IGiteaResponse } from '../IGiteaResponse';
 
 export class MilestoneProvider extends AbstractProvider<Milestone> {
-    public async getData(page: number = 1) : Promise<Milestone[]> {
-        let milestones: Milestone[] = [];
-        Logger.log( `Retrieve milestones - page ${page}`);
-        const milestonesOfPage = (await this.giteaConnector.getMilestones(this.config.repoApiMilestonesUrl, page)).data;
-        Logger.log( `Get Milestones page ${page}: ${milestonesOfPage.length} retrieved`);
+    protected getData(page: number): Promise<IGiteaResponse> {
+        return this.giteaConnector.getMilestones(this.config.repoApiMilestonesUrl, page)
+    }
 
-        milestonesOfPage.forEach((c) => {
-            c.milestone = c.title
-            let milestone = Milestone.createMilestone(c)
+    protected createElement(element: any): Milestone {
+        element.milestone = element.title
+        let milestone = Milestone.createMilestone(element)
 
-            milestone.milestoneId = c.id;
-            milestone.collapsibleState = vscode.TreeItemCollapsibleState.Collapsed;
-            milestone.contextValue = 'milestone';
-            milestone.issueProvider = new IssueProvider('all', undefined, milestone.title)
-            milestones.push(milestone)
-        });
-
-        return milestones
+        milestone.milestoneId = element.id;
+        milestone.collapsibleState = vscode.TreeItemCollapsibleState.Collapsed;
+        milestone.contextValue = 'milestone';
+        milestone.issueProvider = new IssueProvider('all', undefined, milestone.title)
+        return milestone;
     }
 
     protected async createChildNodes(element?: Milestone) {

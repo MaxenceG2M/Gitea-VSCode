@@ -3,27 +3,22 @@ import * as vscode from 'vscode';
 import { AbstractProvider } from './abstractProvider';
 import { IssueProvider } from './issueProvider';
 import { Label } from '../label';
-import { Logger } from '../logger';
+import { IGiteaResponse } from '../IGiteaResponse';
 
 export class LabelProvider extends AbstractProvider<Label> {
-    public async getData(page: number = 1) : Promise<Label[]> {
-        let labels: Label[] = [];
-        Logger.log( `Retrieve labels - page ${page}`);
-        const labelsOfPage = (await this.giteaConnector.getLabels(this.config.repoApiLabelsUrl, page)).data;
-        Logger.log( `Get Labels page ${page}: ${labelsOfPage.length} retrieved`);
+    protected getData(page: number): Promise<IGiteaResponse> {
+        return this.giteaConnector.getLabels(this.config.repoApiLabelsUrl, page)
+    }
 
-        labelsOfPage.forEach((c) => {
-            c.label = c.name
-            let label = Label.createLabel(c)
+    protected createElement(element: any) : Label {
+        element.label = element.name
+        let label = Label.createLabel(element)
 
-            label.labelId = c.id;
-            label.collapsibleState = vscode.TreeItemCollapsibleState.Collapsed;
-            label.contextValue = 'label';
-            label.issueProvider = new IssueProvider('all', label.name)
-            labels.push(label)
-        });
-
-        return labels
+        label.labelId = element.id;
+        label.collapsibleState = vscode.TreeItemCollapsibleState.Collapsed;
+        label.contextValue = 'label';
+        label.issueProvider = new IssueProvider('all', label.name)
+        return label;
     }
 
     protected async createChildNodes(element?: Label) {
