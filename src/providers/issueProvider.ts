@@ -20,7 +20,7 @@ export class IssueProvider extends AbstractProvider<Issue> {
     protected getData(page: number): Promise<IGiteaResponse> {
         return this.giteaConnector.getIssues(
             this.config.repoApiIssuesUrl, this.state, page, this.label, this.milestone)
-    }
+        }
 
     protected createElement(element: any): Issue {
         element.label = `#${element.number} - ${element.title}`;
@@ -37,6 +37,12 @@ export class IssueProvider extends AbstractProvider<Issue> {
         issue.collapsibleState = vscode.TreeItemCollapsibleState.Collapsed;
         issue.contextValue = 'issue';
         return issue
+    }
+
+    protected log(action: string, page: number): void {
+        let milestone = this.milestone ? ` - milestone: ${this.milestone}` : '';
+        let label = this.label ? ` - label: ${this.label}` : '';
+        Logger.log(`${action} issues - state: ${this.state} - page: ${page}${label}${milestone}`)
     }
 
     protected createChildNodes(element: Issue | undefined): Issue[] | Promise<vscode.TreeItem[]> {

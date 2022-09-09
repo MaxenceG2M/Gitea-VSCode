@@ -31,9 +31,9 @@ export abstract class AbstractProvider<T extends Issue | Label | Milestone> impl
 
         let page = 1;
         while (page < 11) {
-            Logger.log( `Retrieve ABSTRACT - page ${page}`); // TODO Log line
+            this.log('Retrieve', page) // TODO find a better way to log ?
             const elementsOfPage = (await this.getData(page)).data;
-            Logger.log( `Get ABSTRACT page ${page}: ${elementsOfPage.length} retrieved`); // TODO Log line
+            Logger.log(`Fetched ${elementsOfPage.length} elements`)
             elementsOfPage.forEach((c) => {
                 c.label = c.name
                 let element = this.createElement(c);
@@ -59,6 +59,8 @@ export abstract class AbstractProvider<T extends Issue | Label | Milestone> impl
      * @param element element to convert
      */
     protected abstract createElement(element: any): T;
+
+    protected abstract log(action: string, page: number): void;
 
     public async refresh() {
         await this.getElements();
