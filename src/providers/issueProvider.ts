@@ -23,12 +23,12 @@ export class IssueProvider extends AbstractProvider<Issue> {
         return this.giteaConnector.getIssues(page, this.state, this.label, this.milestone)
     }
 
-        protected createElement(element: any): Issue {
-            element.label = `#${element.number} - ${element.title}`;
+    protected createElement(element: any): Issue {
+        element.label = `#${element.number} - ${element.title}`;
 
-            let issue = Issue.createIssue(element)
-            issue.issueId = element.number;
-            issue.assignee = element.assignee === null ? 'Nobody' : element.assignee;
+        let issue = Issue.createIssue(element)
+        issue.issueId = element.number;
+        issue.assignee = element.assignee === null ? 'Nobody' : element.assignee;
         issue.creator = element.user.login;
         issue.command = {
             command: 'giteaIssues.openIssue',
