@@ -26,5 +26,9 @@ export class MilestoneProvider extends AbstractProvider<Milestone> {
     protected log(action: string, page: number): void {
         Logger.log(`${action} milestone - page: ${page}`)
     }
+
+    protected log(action: string, page: number): void {
+        this.logger.log(`${action} milestone - page: ${page}`)
+    }
 }
 

@@ -26,5 +26,9 @@ export class LabelProvider extends AbstractProvider<Label> {
     protected log(action: string, page: number): void {
         Logger.log(`${action} labels - page: ${page}`)
     }
+
+    protected log(action: string, page: number): void {
+        this.logger.log(`${action} labels - page: ${page}`)
+    }
 }
 
