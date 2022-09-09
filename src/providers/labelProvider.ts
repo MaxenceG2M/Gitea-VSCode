@@ -8,7 +8,7 @@ import { IssueProvider } from './issueProvider';
 
 export class LabelProvider extends AbstractProvider<Label> {
     protected getData(page: number): Promise<IGiteaResponse> {
-        return this.giteaConnector.getLabels(this.config.repoApiLabelsUrl, page)
+        return this.giteaConnector.getLabels(page)
     }
 
     protected createElement(element: any) : Label {
@@ -18,7 +18,7 @@ export class LabelProvider extends AbstractProvider<Label> {
         label.labelId = element.id;
         label.collapsibleState = vscode.TreeItemCollapsibleState.Collapsed;
         label.contextValue = 'label';
-        label.issueProvider = new IssueProvider('all', label.name)
+        label.issueProvider = new IssueProvider(this.giteaConnector, IssueProvider.DefaultState, label.name)
         return label;
     }
 

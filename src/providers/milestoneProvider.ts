@@ -8,7 +8,7 @@ import { IssueProvider } from './issueProvider';
 
 export class MilestoneProvider extends AbstractProvider<Milestone> {
     protected getData(page: number): Promise<IGiteaResponse> {
-        return this.giteaConnector.getMilestones(this.config.repoApiMilestonesUrl, page)
+        return this.giteaConnector.getMilestones(page)
     }
 
     protected createElement(element: any): Milestone {
@@ -18,7 +18,7 @@ export class MilestoneProvider extends AbstractProvider<Milestone> {
         milestone.milestoneId = element.id;
         milestone.collapsibleState = vscode.TreeItemCollapsibleState.Collapsed;
         milestone.contextValue = 'milestone';
-        milestone.issueProvider = new IssueProvider('all', undefined, milestone.title)
+        milestone.issueProvider = new IssueProvider(this.giteaConnector, IssueProvider.DefaultState, undefined, milestone.title)
         return milestone;
     }
 

@@ -8,6 +8,12 @@ interface Label {
   url: string;
 }
 
+export enum IssueState {
+    All = 'all',
+    Open = 'open',
+    Closed = 'closed'
+}
+
 export class Issue extends TreeItem {
     contextValue = 'issue';
     original_issue? : Issue;
