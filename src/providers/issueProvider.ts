@@ -45,7 +45,7 @@ export class IssueProvider extends AbstractProvider<Issue> {
         Logger.log(`${action} issues - state: ${this.state} - page: ${page}${label}${milestone}`)
     }
 
-    protected createChildNodes(element: Issue | undefined): Issue[] | Promise<vscode.TreeItem[]> {
+    protected createChildNodes(element: Issue | undefined): Promise< Issue [] | vscode.TreeItem[]> {
         for (const issue of this.elementList) {
             if (element === issue) {
                 let childItems: vscode.TreeItem[] = [
@@ -57,7 +57,7 @@ export class IssueProvider extends AbstractProvider<Issue> {
                 return Promise.resolve(childItems);
             }
         }
-        return this.elementList;
+        return Promise.resolve(this.elementList);
     }
 }
 
