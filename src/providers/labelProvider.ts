@@ -21,23 +21,7 @@ export class LabelProvider extends AbstractProvider<Label> {
         label.issueProvider = new IssueProvider('all', label.name)
         return label;
     }
-
-    protected async createChildNodes(element?: Label) {
-        for (const label of this.elementList) {
-            if (element === label) {
-                let issues = await Promise.resolve(label.issueProvider?.getElements());
-
-                if (!issues) return Promise.resolve([]);
-
-                let childItems: vscode.TreeItem[] = issues;
-                childItems.map(issue => issue.collapsibleState = vscode.TreeItemCollapsibleState.None)
-
-                return Promise.resolve(childItems)
-            }
-        }
-        return this.elementList;
-    }
-
+    
     protected log(action: string, page: number): void {
         Logger.log(`${action} labels - page: ${page}`)
     }

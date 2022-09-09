@@ -68,9 +68,26 @@ export abstract class AbstractProvider<T extends Issue | Label | Milestone> impl
     }
 
     public getChildren(element?: T): vscode.ProviderResult<any[]> {
-        return this.createChildNodes(element, this.elementList);
+        return this.createChildNodes(element);
     }
 
-    protected abstract createChildNodes(element: T | undefined, elements: T[]): T[] | Promise<vscode.TreeItem[]>;
+    protected async createChildNodes(element: T | undefined): Promise<T[] | vscode.TreeItem[]> {
+        for (const currentEl of this.elementList) {
+            if (element === currentEl) {
+                if (currentEl instanceof Issue) {
+                    throw "Issues need a specific implementation to show children";
+                }
+
+                let issues = await Promise.resolve(currentEl.issueProvider?.getElements());
+                if (!issues) return Promise.resolve([]);
+
+                let childItems: vscode.TreeItem[] = issues;
+                childItems.map(issue => issue.collapsibleState = vscode.TreeItemCollapsibleState.None)
+
+                return Promise.resolve(childItems)
+            }
+        }
+        return this.elementList;
+    }
 }
 
