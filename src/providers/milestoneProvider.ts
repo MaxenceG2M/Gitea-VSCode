@@ -4,6 +4,7 @@ import { AbstractProvider } from './abstractProvider';
 import { IssueProvider } from './issueProvider';
 import { Milestone } from '../milestone';
 import { IGiteaResponse } from '../IGiteaResponse';
+import { Logger } from '../logger';
 
 export class MilestoneProvider extends AbstractProvider<Milestone> {
     protected getData(page: number): Promise<IGiteaResponse> {
@@ -35,6 +36,10 @@ export class MilestoneProvider extends AbstractProvider<Milestone> {
             }
         }
         return this.elementList;
+    }
+
+    protected log(action: string, page: number): void {
+        Logger.log(`${action} milestone - page: ${page}`)
     }
 }
 

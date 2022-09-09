@@ -4,6 +4,7 @@ import { AbstractProvider } from './abstractProvider';
 import { IssueProvider } from './issueProvider';
 import { Label } from '../label';
 import { IGiteaResponse } from '../IGiteaResponse';
+import { Logger } from '../logger';
 
 export class LabelProvider extends AbstractProvider<Label> {
     protected getData(page: number): Promise<IGiteaResponse> {
@@ -35,6 +36,10 @@ export class LabelProvider extends AbstractProvider<Label> {
             }
         }
         return this.elementList;
+    }
+
+    protected log(action: string, page: number): void {
+        Logger.log(`${action} labels - page: ${page}`)
     }
 }
 
