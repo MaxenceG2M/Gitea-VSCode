@@ -2,10 +2,11 @@ import * as vscode from 'vscode';
 import MarkdownIt = require('markdown-it');
 
 import { showIssueHTML, showIssueMD } from './template.issues';
-import { Issue } from './issue';
+import { Issue, IssueState } from './issue';
 import { IssueProvider } from './providers/issueProvider';
 import { LabelProvider } from './providers/labelProvider';
 import { MilestoneProvider } from './providers/milestoneProvider';
+import { GiteaConnector } from './giteaConnector';
 
 import { Logger } from './logger';
 import { Config } from './config';
@@ -36,13 +37,16 @@ export function activate(context: vscode.ExtensionContext) {
     Logger.init()
     Logger.log('Starting Gitea ...');
 
+    const config = new Config();
+    const connector = new GiteaConnector(config.repoApiUrl, config.token, config.sslVerify)
+
     // Array of issues; This is used to determine whether a issue is already open
     // in a tab or not.
     let openIssues: Array<Issue> = [];
-    const openIssuesProvider = new IssueProvider("open");
-    const closedIssuesProvider = new IssueProvider("closed");
-    const labelsProvider = new LabelProvider();
-    const milestonesProvider = new MilestoneProvider();
+    const openIssuesProvider = new IssueProvider(connector, IssueState.Open);
+    const closedIssuesProvider = new IssueProvider(connector, IssueState.Closed);
+    const labelsProvider = new LabelProvider(connector);
+    const milestonesProvider = new MilestoneProvider(connector);
 
     vscode.window.registerTreeDataProvider('giteaIssues.opened-issues', openIssuesProvider);
     vscode.window.registerTreeDataProvider('giteaIssues.closed-issues', closedIssuesProvider);

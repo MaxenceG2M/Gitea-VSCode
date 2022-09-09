@@ -1,14 +1,14 @@
 import * as vscode from 'vscode';
 
+import { IGiteaResponse } from '../IGiteaResponse';
+import { Milestone } from '../milestone';
 import { AbstractProvider } from './abstractProvider';
 import { IssueProvider } from './issueProvider';
-import { Milestone } from '../milestone';
-import { IGiteaResponse } from '../IGiteaResponse';
 import { Logger } from '../logger';
 
 export class MilestoneProvider extends AbstractProvider<Milestone> {
     protected getData(page: number): Promise<IGiteaResponse> {
-        return this.giteaConnector.getMilestones(this.config.repoApiMilestonesUrl, page)
+        return this.giteaConnector.getMilestones(page)
     }
 
     protected createElement(element: any): Milestone {
@@ -18,10 +18,10 @@ export class MilestoneProvider extends AbstractProvider<Milestone> {
         milestone.milestoneId = element.id;
         milestone.collapsibleState = vscode.TreeItemCollapsibleState.Collapsed;
         milestone.contextValue = 'milestone';
-        milestone.issueProvider = new IssueProvider('all', undefined, milestone.title)
+        milestone.issueProvider = new IssueProvider(this.giteaConnector, IssueProvider.DefaultState, undefined, milestone.title)
         return milestone;
     }
-    
+
     protected log(action: string, page: number): void {
         Logger.log(`${action} milestone - page: ${page}`)
     }
