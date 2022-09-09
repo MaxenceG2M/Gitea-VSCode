@@ -39,6 +39,9 @@ export function activate(context: vscode.ExtensionContext) {
     const config = new Config();
     const connector = new GiteaConnector(config.repoApiUrl, config.token, config.sslVerify)
 
+    const config = new Config();
+    const connector = new GiteaConnector(config.repoApiUrl, config.token, config.sslVerify, logger)
+
     // Array of issues; This is used to determine whether a issue is already open
     // in a tab or not.
     let openIssues: Array<Issue> = [];

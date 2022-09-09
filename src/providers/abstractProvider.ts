@@ -14,6 +14,7 @@ export abstract class AbstractProvider<T extends Issue | Label | Milestone> impl
     protected elementList: T[] = [];
 
     protected readonly giteaConnector: GiteaConnector;
+    protected readonly logger: Logger;
 
     constructor(giteaConnector: GiteaConnector) {
         this.giteaConnector = giteaConnector;

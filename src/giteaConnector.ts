@@ -15,11 +15,13 @@ export class GiteaConnector {
     private repoUri: string;
     private authToken: string;
     private ssl: boolean;
+    private logger: Logger;
 
     public constructor(repoUri: string, authToken: string, ssl: boolean = false) {
         this.repoUri = repoUri;
         this.authToken = authToken;
         this.ssl = ssl;
+        this.logger = logger
     }
 
     public async getIssues(page: number = 1, state: string = 'all', label? :string, milestone?: string): Promise<IGiteaResponse> {
@@ -41,9 +43,8 @@ export class GiteaConnector {
         return this.getEndpoint(`${this.repoUri}/${GiteaEndpoint.Milestones}?page=${page}`);
     }
 
-    public async getMilestones(repoUri: string, page: number = 0): Promise<IGiteaResponse> {
-        return this.getEndpoint(`${repoUri}?page=${page}`);
-        // TODO get repo url here
+    public async getMilestones(page: number = 0): Promise<IGiteaResponse> {
+        return this.getEndpoint(`${this.repoUri}/${GiteaEndpoint.Milestones}?page=${page}`);
     }
 
     private async getEndpoint(url: string): Promise<IGiteaResponse> {
