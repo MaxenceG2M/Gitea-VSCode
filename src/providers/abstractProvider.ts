@@ -1,12 +1,11 @@
 import * as vscode from 'vscode';
-import { Config } from '../config';
+
 import { GiteaConnector } from '../giteaConnector';
+import { IGiteaResponse } from '../IGiteaResponse';
 import { Issue } from '../issue';
 import { Label } from '../label';
-import { Milestone } from '../milestone';
-
 import { Logger } from '../logger';
-import { IGiteaResponse } from '../IGiteaResponse';
+import { Milestone } from '../milestone';
 
 export abstract class AbstractProvider<T extends Issue | Label | Milestone> implements vscode.TreeDataProvider<T> {
     private _onDidChangeTreeData: vscode.EventEmitter<T | undefined | null | void> = new vscode.EventEmitter<T | undefined | null | void>();
@@ -14,12 +13,10 @@ export abstract class AbstractProvider<T extends Issue | Label | Milestone> impl
 
     protected elementList: T[] = [];
 
-    protected readonly config: Config;
     protected readonly giteaConnector: GiteaConnector;
 
-    constructor() {
-        this.config = new Config();
-        this.giteaConnector = new GiteaConnector(this.config.token, this.config.sslVerify);
+    constructor(giteaConnector: GiteaConnector) {
+        this.giteaConnector = giteaConnector;
     }
 
     public getTreeItem(element: T): vscode.TreeItem | Thenable<vscode.TreeItem> {

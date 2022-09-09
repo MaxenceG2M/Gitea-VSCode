@@ -1,26 +1,27 @@
 import * as vscode from 'vscode';
-import { IGiteaResponse } from '../IGiteaResponse';
 
-import { Issue } from '../issue';
+import { GiteaConnector } from '../giteaConnector';
+import { IGiteaResponse } from '../IGiteaResponse';
+import { Issue, IssueState } from '../issue';
 import { Logger } from '../logger';
 import { AbstractProvider } from './abstractProvider';
 
 export class IssueProvider extends AbstractProvider<Issue> {
+    public static readonly DefaultState = IssueState.All;
     private state: string;
     private label?: string;
     private milestone?: string;
 
-    constructor(state: string, label?: string, milestone?: string) {
-        super();
+    constructor(giteaConnector: GiteaConnector, state: string = "all", label?: string, milestone?: string) {
+        super(giteaConnector);
         this.state = state;
         this.label = label
         this.milestone = milestone
     }
 
     protected getData(page: number): Promise<IGiteaResponse> {
-        return this.giteaConnector.getIssues(
-            this.config.repoApiIssuesUrl, this.state, page, this.label, this.milestone)
-        }
+        return this.giteaConnector.getIssues(page, this.state, this.label, this.milestone)
+    }
 
     protected createElement(element: any): Issue {
         element.label = `#${element.number} - ${element.title}`;

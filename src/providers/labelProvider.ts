@@ -1,14 +1,14 @@
 import * as vscode from 'vscode';
 
+import { IGiteaResponse } from '../IGiteaResponse';
+import { Label } from '../label';
 import { AbstractProvider } from './abstractProvider';
 import { IssueProvider } from './issueProvider';
-import { Label } from '../label';
-import { IGiteaResponse } from '../IGiteaResponse';
 import { Logger } from '../logger';
 
 export class LabelProvider extends AbstractProvider<Label> {
     protected getData(page: number): Promise<IGiteaResponse> {
-        return this.giteaConnector.getLabels(this.config.repoApiLabelsUrl, page)
+        return this.giteaConnector.getLabels(page)
     }
 
     protected createElement(element: any) : Label {
@@ -18,10 +18,10 @@ export class LabelProvider extends AbstractProvider<Label> {
         label.labelId = element.id;
         label.collapsibleState = vscode.TreeItemCollapsibleState.Collapsed;
         label.contextValue = 'label';
-        label.issueProvider = new IssueProvider('all', label.name)
+        label.issueProvider = new IssueProvider(this.giteaConnector, IssueProvider.DefaultState, label.name)
         return label;
     }
-    
+
     protected log(action: string, page: number): void {
         Logger.log(`${action} labels - page: ${page}`)
     }
