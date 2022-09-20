@@ -70,21 +70,10 @@ export function activate(context: vscode.ExtensionContext) {
         closedIssuesProvider.refresh();
     });
 
-    vscode.commands.registerCommand('giteaIssues.refreshOpenIssues', () => {
-        openIssuesProvider.refresh();
-    });
-
-    vscode.commands.registerCommand('giteaIssues.refreshClosedIssues', () => {
-        closedIssuesProvider.refresh()
-    });
-
-    vscode.commands.registerCommand('giteaIssues.refreshLabels', () => {
-        labelsProvider.refresh()
-    });
-
-    vscode.commands.registerCommand('giteaIssues.refreshMilestones', () => {
-        milestonesProvider.refresh()
-    });
+    vscode.commands.registerCommand('giteaIssues.refreshOpenIssues', () => { openIssuesProvider.refresh() });
+    vscode.commands.registerCommand('giteaIssues.refreshClosedIssues', () => { closedIssuesProvider.refresh() });
+    vscode.commands.registerCommand('giteaIssues.refreshLabels', () => { labelsProvider.refresh() });
+    vscode.commands.registerCommand('giteaIssues.refreshMilestones', () => { milestonesProvider.refresh() });
 
     Logger.log('Gitea is ready')
 }

@@ -65,7 +65,7 @@ export abstract class AbstractProvider<T extends Issue | Label | Milestone> impl
     }
 
     public getChildren(element?: T): vscode.ProviderResult<any[]> {
-        return this.createChildNodes(element);
+        return element ? this.createChildNodes(element) : this.getElements()
     }
 
     protected async createChildNodes(element: T | undefined): Promise<T[] | vscode.TreeItem[]> {
