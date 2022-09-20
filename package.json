@@ -12,6 +12,9 @@
     ],
     "activationEvents": [
         "onView:giteaIssues.opened-issues",
+        "onView:giteaIssues.closed-issues",
+        "onView:giteaIssues.labels",
+        "onView:giteaIssues.milestones",
         "onCommand:giteaIssues.initRepo",
         "onCommand:giteaIssues.refreshIssues",
         "onCommand:giteaIssues.refreshOpenIssues",
