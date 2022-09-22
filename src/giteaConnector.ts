@@ -5,17 +5,40 @@ import axios from 'axios';
 import { IGiteaResponse } from './IGiteaResponse';
 import { Logger } from './logger';
 
+enum GiteaEndpoint {
+    Issues = 'issues',
+    Labels = 'labels',
+    Milestones = 'milestones',
+}
+
 export class GiteaConnector {
+    private repoUri: string;
     private authToken: string;
     private ssl: boolean;
 
-    public constructor(authToken: string, ssl: boolean = false) {
+    public constructor(repoUri: string, authToken: string, ssl: boolean = false) {
+        this.repoUri = repoUri;
         this.authToken = authToken;
         this.ssl = ssl;
     }
 
-    public async getIssues(repoUri: string, state: string, page: number = 0): Promise<IGiteaResponse> {
-        return this.getEndpoint(`${repoUri}?state=${state}&page=${page}`);
+    public async getIssues(page: number = 1, state: string = 'all', label? :string, milestone?: string): Promise<IGiteaResponse> {
+        let endpoint = `${this.repoUri}/${GiteaEndpoint.Issues}?state=${state}&page=${page}`;
+        if (label) {
+            endpoint += `&labels=${label}`
+        }
+        if (milestone) {
+            endpoint += `&milestones=${milestone}`
+        }
+        return this.getEndpoint(endpoint);
+    }
+
+    public async getLabels(page: number = 0): Promise<IGiteaResponse> {
+        return this.getEndpoint(`${this.repoUri}/${GiteaEndpoint.Labels}?page=${page}`);
+    }
+
+    public async getMilestones(page: number = 0): Promise<IGiteaResponse> {
+        return this.getEndpoint(`${this.repoUri}/${GiteaEndpoint.Milestones}?page=${page}`);
     }
 
     private async getEndpoint(url: string): Promise<IGiteaResponse> {

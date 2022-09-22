@@ -13,7 +13,9 @@
     "activationEvents": [
         "onView:giteaIssues.opened-issues",
         "onCommand:giteaIssues.initRepo",
-        "onCommand:giteaIssues.refreshIssues"
+        "onCommand:giteaIssues.refreshIssues",
+        "onCommand:giteaIssues.refreshOpenIssues",
+        "onCommand:giteaIssues.refreshClosedIssues"
     ],
     "main": "./out/extension.js",
     "icon": "resources/icon.png",
@@ -21,11 +23,11 @@
         "viewsWelcome": [
             {
                 "view": "giteaIssues.opened-issues",
-                "contents": "Refresh to get Gitea opened issues .\n[Refresh](command:giteaIssues.refreshIssues)"
+                "contents": "Refresh to get Gitea opened issues .\n[Refresh opened issues](command:giteaIssues.refreshOpenIssues)"
             },
             {
                 "view": "giteaIssues.closed-issues",
-                "contents": "Refresh to get Gitea closed issues .\n[Refresh](command:giteaIssues.refreshIssues)"
+                "contents": "Refresh to get Gitea closed issues .\n[Refresh closed issues](command:giteaIssues.refreshClosedIssues)"
             }
         ],
         "viewsContainers": {
@@ -33,7 +35,7 @@
                 {
                     "id": "giteaIssues",
                     "title": "Gitea-Issues",
-                    "icon": "media/issue.svg"
+                    "icon": "$(issues)"
                 }
             ]
         },
@@ -41,11 +43,23 @@
             "giteaIssues": [
                 {
                     "id": "giteaIssues.opened-issues",
-                    "name": "Open Issues"
+                    "name": "Opened Issues",
+                    "type": "tree"
                 },
                 {
                     "id": "giteaIssues.closed-issues",
-                    "name": "Closed Issues"
+                    "name": "Closed Issues",
+                    "visibility": "collapsed"
+                },
+                {
+                    "id": "giteaIssues.labels",
+                    "name": "Labels",
+                    "visibility": "collapsed"
+                },
+                {
+                    "id": "giteaIssues.milestones",
+                    "name": "Milestones",
+                    "visibility": "collapsed"
                 }
             ]
         },
@@ -55,20 +69,47 @@
                 "title": "Show"
             },
             {
-                "command": "giteaIssues.refreshIssues",
-                "title": "Refresh",
-                "icon": {
-                    "dark": "resources/dark/refresh.svg",
-                    "light": "resources/light/refresh.svg"
-                }
+                "command": "giteaIssues.refreshOpenIssues",
+                "title": "Refresh opened issues",
+                "icon": "$(refresh)"
+            },
+            {
+                "command": "giteaIssues.refreshClosedIssues",
+                "title": "Refresh closed issues",
+                "icon": "$(refresh)"
+            },
+            {
+                "command": "giteaIssues.refreshLabels",
+                "title": "Refresh Labels",
+                "icon": "$(refresh)"
+            },
+            {
+                "command": "giteaIssues.refreshMilestones",
+                "title": "Refresh Milestones",
+                "icon": "$(refresh)"
             }
         ],
         "menus": {
             "view/title": [
                 {
-                    "command": "giteaIssues.refreshIssues",
+                    "command": "giteaIssues.refreshOpenIssues",
                     "group": "navigation",
                     "when": "view == giteaIssues.opened-issues"
+                },
+                {
+                    "command": "giteaIssues.refreshClosedIssues",
+                    "group": "navigation",
+                    "when": "view == giteaIssues.closed-issues"
+                },
+                {
+                    "command": "giteaIssues.refreshLabels",
+                    "group": "navigation",
+                    "when": "view == giteaIssues.labels"
+                },
+                {
+                    "command": "giteaIssues.refreshMilestones",
+                    "group": "navigation",
+                    "when": "view == giteaIssues.milestones"
                 }
             ]
         },

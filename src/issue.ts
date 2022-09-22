@@ -1,4 +1,5 @@
 import { Uri, TreeItem, TreeItemCollapsibleState, Command } from 'vscode';
+import { Milestone } from './milestone';
 
 interface Label {
   color: string;
@@ -7,7 +8,34 @@ interface Label {
   url: string;
 }
 
+export enum IssueState {
+    All = 'all',
+    Open = 'open',
+    Closed = 'closed'
+}
+
 export class Issue extends TreeItem {
+    contextValue = 'issue';
+    original_issue? : Issue;
+
+  static createIssue(element: Issue) {
+    let ret = new Issue(
+        element.label,
+        element.issueId,
+        element.body,
+        element.state,
+        element.assignee,
+        element.assignees,
+        element.creator,
+        element.labels,
+        element.collapsibleState,
+        element.title,
+        element.html_url,
+        element.milestone)
+    ret.original_issue = element;
+    return ret
+  }
+
   constructor(
     public readonly label: string,
     public issueId: number,
@@ -20,6 +48,7 @@ export class Issue extends TreeItem {
     public collapsibleState: TreeItemCollapsibleState,
     public title: string,
     public html_url: string,
+    public milestone?: Milestone,
     public command?: Command
   ) {
     super(label, collapsibleState);
@@ -39,7 +68,12 @@ export class Issue extends TreeItem {
     dark: this.labelDependentIcon(true),
   };
 
-  contextValue = 'issue';
+  hasLabel(labelName: string): boolean {
+    for (let label of this.labels) {
+        if (label.name == labelName) return true
+    }
+    return false
+  }
 }
 
 export function createIconWithColor(color: string): Uri {
