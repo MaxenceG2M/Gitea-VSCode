@@ -11,7 +11,7 @@ import { GiteaConnector } from './giteaConnector';
 import { Logger } from './logger';
 import { Config } from './config';
 
-export function showIssueInWebPanel(issue: Issue) {
+export function createIssueWebPanel(issue: Issue) {
     const panel = vscode.window.createWebviewPanel(
         'issue',
         issue.label,
@@ -40,9 +40,9 @@ export function activate(context: vscode.ExtensionContext) {
     const config = new Config();
     const connector = new GiteaConnector(config.repoApiUrl, config.token, config.sslVerify)
 
-    // Array of issues; This is used to determine whether a issue is already open
-    // in a tab or not.
-    let openIssues: Array<Issue> = [];
+    // Map of issues; This is used to determine whether an issue is already open
+    // in a tab or not, so that it can be opened or reactivated.
+    let openIssuePanels: Map<number, vscode.WebviewPanel> = new Map<number, vscode.WebviewPanel>();
     const openIssuesProvider = new IssueProvider(connector, IssueState.Open);
     const closedIssuesProvider = new IssueProvider(connector, IssueState.Closed);
     const labelsProvider = new LabelProvider(connector);
@@ -54,14 +54,17 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.window.registerTreeDataProvider('giteaIssues.milestones', milestonesProvider);
 
     vscode.commands.registerCommand('giteaIssues.openIssue', (issue: Issue) => {
-        const issueOpenable = openIssues.find((c) => c.issueId === issue.issueId) === undefined;
-
+        const issueOpenable = !openIssuePanels.has(issue.issueId);
         if (issueOpenable) {
-            const panel = showIssueInWebPanel(issue);
-            openIssues.push(issue);
+            const panel = createIssueWebPanel(issue);
+            openIssuePanels.set(issue.issueId, panel);
             panel.onDidDispose((event) => {
-                openIssues.splice(openIssues.indexOf(issue), 1);
+                openIssuePanels.delete(issue.issueId);
             });
+        }
+        else {
+            const panel = openIssuePanels.get(issue.issueId);
+            panel?.reveal(panel.viewColumn, false);
         }
     });
 
